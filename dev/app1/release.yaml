@@ -4,6 +4,7 @@ metadata:
   name: app1
   namespace: team-a
 spec:
+  serviceAccountName: team-a
   interval: 1m
   releaseName: app1
   chart:
