@@ -6,8 +6,8 @@ metadata:
 spec:
   interval: 1m0s
   provider: github
-  #secretRef:
-  #  name: flux-system
+  secretRef:
+    name: flux-system
   url: https://github.com/git-ops92/helm-generic-chart
   ref:
     name: refs/heads/main
