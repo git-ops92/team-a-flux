@@ -1,0 +1,18 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: app1
+  namespace: team-a
+spec:
+  interval: 1m0s
+  provider: github
+  #secretRef:
+  #  name: flux-system
+  url: https://github.com/git-ops92/app1
+  ref:
+    name: refs/heads/main
+  include:
+    - repository:
+        name: helm-generic-chart
+      fromPath: chart
+      toPath: chart

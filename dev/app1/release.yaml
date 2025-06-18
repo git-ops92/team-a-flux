@@ -1,0 +1,20 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: app1
+  namespace: test
+spec:
+  interval: 1m
+  releaseName: app1
+  chart:
+    spec:
+      reconcileStrategy: Revision
+      valuesFiles:
+        - chart/ingress-nginx-4-11-5/values.yaml
+        - values/myvalues.yml
+      chart: chart/ingress-nginx-4-11-5
+      sourceRef:
+        kind: GitRepository
+        name: app1
+        namespace: flux-system
+      interval: 1m

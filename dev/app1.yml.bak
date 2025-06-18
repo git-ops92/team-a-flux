@@ -1,0 +1,59 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: helm-generic-chart
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  provider: github
+  secretRef:
+    name: flux-system
+  url: https://github.com/git-ops92/helm-generic-chart
+  ref:
+    name: refs/heads/main
+  ignore: |-
+    # exclude all
+    /*
+    # include charts directory
+    !/chart/
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: app1
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  provider: github
+  secretRef:
+    name: flux-system
+  url: https://github.com/git-ops92/app1
+  ref:
+    name: refs/heads/main
+  include:
+    - repository:
+        name: helm-generic-chart
+      fromPath: chart
+      toPath: chart
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: app1
+  namespace: test
+spec:
+  interval: 1m
+  releaseName: app1
+  chart:
+    spec:
+      reconcileStrategy: Revision
+      valuesFiles:
+        - chart/ingress-nginx-4-11-5/values.yaml
+        - values/myvalues.yml
+      chart: chart/ingress-nginx-4-11-5
+      sourceRef:
+        kind: GitRepository
+        name: app1
+        namespace: flux-system
+      interval: 1m
+
